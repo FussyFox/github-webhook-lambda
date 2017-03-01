@@ -1,0 +1,2 @@
+## boto3 is already installed on AWS lambda.
+# boto3
