@@ -9,7 +9,7 @@ Make sure you have the AWS cli tools setup. And clone this repository.
 ```shell
 virtuelenv env -p `which python2`
 pip install -U chalice -r requirements.txt
-SECRET= chalice deploy
+chalice deploy
 ```
 
 Next you need to get to your AWS console and set the Webhooks secret in the
