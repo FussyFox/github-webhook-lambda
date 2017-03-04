@@ -41,7 +41,10 @@ def index():
         raise BadRequestError()
 
     sns_topics = SNS.list_topics()['Topics']
-    topic_arns = {t['TopicArn'].rsplit(':')[-1]: t['TopicArn'] for t in sns_topics}
+    topic_arns = {
+        t['TopicArn'].rsplit(':')[-1]: t['TopicArn']
+        for t in sns_topics
+        }
     if event not in topic_arns.keys():
         topic_arns[event] = SNS.create_topic(Name=event)['TopicArn']
 
