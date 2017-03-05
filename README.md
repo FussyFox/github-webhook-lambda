@@ -1,6 +1,6 @@
 # GitHub WebHook receiver for AWS Lambda
 
-Python based AWS lambda function that can receive GitHub WebHooks.
+Python based AWS lambda function that receives GitHub WebHooks and publishes them to SNS topics.
 
 ### Installation
 
