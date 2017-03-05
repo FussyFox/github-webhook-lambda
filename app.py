@@ -1,3 +1,10 @@
+"""
+GitHub WebHook receiver for AWS Lambda.
+
+Python based AWS lambda function that receives GitHub WebHooks
+and publishes them to SNS topics.
+"""
+
 import hashlib
 import hmac
 import json
