@@ -1,3 +1,6 @@
+[![Build Status](https://travis-ci.org/codingjoe/github-webhook-lambda.svg?branch=master)](https://travis-ci.org/codingjoe/github-webhook-lambda)
+[![Coverage Status](https://coveralls.io/repos/github/codingjoe/codingjoe.github.io/badge.svg?branch=master)](https://coveralls.io/github/codingjoe/codingjoe.github.io?branch=master)
+
 # GitHub WebHook receiver for AWS Lambda
 
 Python based AWS lambda function that receives GitHub WebHooks and publishes them to SNS topics.

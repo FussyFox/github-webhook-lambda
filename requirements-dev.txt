@@ -1,0 +1,5 @@
+chalice
+boto3
+pytest
+coverage
+coveralls

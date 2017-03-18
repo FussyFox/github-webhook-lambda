@@ -13,25 +13,28 @@ import os
 import boto3
 from chalice import BadRequestError, Chalice, UnauthorizedError
 
-DEBUG = os.environ.get('DEBUG', '') in [1, '1', 'True', 'true']
-SECRET = os.environ.get('SECRET')
+CONFIG = {
+    'DEBUG': os.environ.get('DEBUG', '') in [1, '1', 'True', 'true'],
+    'SECRET': os.environ.get('SECRET'),
+}
 
 app = Chalice(app_name='github-webhooks')
-app.debug = DEBUG
+app.debug = CONFIG['DEBUG']
 
-SNS = boto3.client('sns')
+SNS = boto3.client('sns', region_name='us-west-1')
 
 
 def validate_signature(request):
     """Validate that the signature in the header matches the payload."""
-    if SECRET is None:
+    if CONFIG['SECRET'] is None:
         return
     try:
         signature = request.headers['X-Hub-Signature']
         _, sha1 = signature.split('=')
-    except KeyError:
+    except (KeyError, ValueError):
         raise BadRequestError()
-    digest = hmac.new(SECRET, request.raw_body, hashlib.sha1).hexdigest()
+    digest = hmac.new(CONFIG['SECRET'], request.raw_body, hashlib.sha1) \
+        .hexdigest()
     if not hmac.compare_digest(digest, sha1.encode('utf-8')):
         raise UnauthorizedError()
 
