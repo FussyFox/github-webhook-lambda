@@ -16,12 +16,13 @@ from chalice import BadRequestError, Chalice, UnauthorizedError
 CONFIG = {
     'DEBUG': os.environ.get('DEBUG', '') in [1, '1', 'True', 'true'],
     'SECRET': os.environ.get('SECRET'),
+    'S3_REGION': os.environ.get('S3_REGION', 'eu-west-1'),
 }
 
 app = Chalice(app_name='github-webhooks')
 app.debug = CONFIG['DEBUG']
 
-SNS = boto3.client('sns', region_name='us-west-1')
+SNS = boto3.client('sns', region_name=CONFIG['S3_REGION'])
 
 
 def validate_signature(request):
@@ -39,8 +40,8 @@ def validate_signature(request):
         raise UnauthorizedError()
 
 
-@app.route('/', methods=['POST'])
-def index():
+@app.route('/{integration}', methods=['POST'])
+def index(integration):
     """Consume GitHub webhook and publish hooks to AWS SNS."""
     request = app.current_request
     validate_signature(request)
@@ -55,11 +56,12 @@ def index():
         t['TopicArn'].rsplit(':')[-1]: t['TopicArn']
         for t in sns_topics
         }
-    if event not in topic_arns.keys():
-        topic_arns[event] = SNS.create_topic(Name=event)['TopicArn']
+    topic = f'{integration}_{event}'
+    if topic not in topic_arns.keys():
+        topic_arns[topic] = SNS.create_topic(Name=topic)['TopicArn']
 
     SNS.publish(
-        TargetArn=topic_arns[event],
+        TargetArn=topic_arns[topic],
         Message=json.dumps({'default': json.dumps(request.json_body)}),
         MessageStructure='json'
     )
