@@ -39,7 +39,7 @@ class TestApp(object):
         stubber.add_response('list_topics', {'Topics': [{'TopicArn': 'arn:foo:bar:push'}]})
         stubber.add_response('publish', {'MessageId': '1234'})
         with stubber:
-            response = index()
+            response = index('123')
         assert response == {'Code': 'Ok', 'Message': 'Webhook received.'}
 
     def test_no_signature(self):
@@ -50,7 +50,7 @@ class TestApp(object):
         })
 
         with pytest.raises(BadRequestError):
-            index()
+            index('123')
 
     def test_wrong_signature_format(self):
         CONFIG['SECRET'] = 'very-secret'
@@ -61,7 +61,7 @@ class TestApp(object):
         })
 
         with pytest.raises(BadRequestError):
-            index()
+            index('123')
 
     def test_wrong_signature(self):
         CONFIG['SECRET'] = 'very-secret'
@@ -72,7 +72,7 @@ class TestApp(object):
         })
 
         with pytest.raises(UnauthorizedError):
-            index()
+            index('123')
 
     def test_missing_event_type(self):
         app.current_request = Request(push, {
@@ -81,7 +81,7 @@ class TestApp(object):
         })
 
         with pytest.raises(BadRequestError):
-            index()
+            index('123')
 
     def test_create_missing_topic(self):
         app.current_request = Request(push, {
@@ -96,5 +96,5 @@ class TestApp(object):
         stubber.add_response('publish', {'MessageId': '1234'})
 
         with stubber:
-            response = index()
+            response = index('123')
         assert response == {'Code': 'Ok', 'Message': 'Webhook received.'}
