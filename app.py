@@ -62,6 +62,7 @@ def index(integration):
 
     SNS.publish(
         TargetArn=topic_arns[topic],
+        Subject=event,
         Message=json.dumps({'default': json.dumps(request.json_body)}),
         MessageStructure='json'
     )
