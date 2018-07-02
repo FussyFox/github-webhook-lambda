@@ -1,5 +1,5 @@
-[![Build Status](https://travis-ci.org/lambda-lint/github-webhook-lambda.svg?branch=master)](https://travis-ci.org/lambda-lint/github-webhook-lambda)
-[![Coverage Status](https://codecov.io/gh/lambda-lint/github-webhook-lambda/branch/master/graph/badge.svg)](https://codecov.io/gh/lambda-lint/github-webhook-lambda)
+[![Build Status](https://travis-ci.org/LambdaLint/github-webhook-lambda.svg?branch=master)](https://travis-ci.org/LambdaLint/github-webhook-lambda)
+[![Coverage Status](https://codecov.io/gh/LambdaLint/github-webhook-lambda/branch/master/graph/badge.svg)](https://codecov.io/gh/LambdaLint/github-webhook-lambda)
 
 # GitHub WebHook receiver for AWS Lambda
 
