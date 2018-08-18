@@ -36,7 +36,7 @@ class TestApp(object):
         })
 
         stubber = Stubber(SNS)
-        stubber.add_response('list_topics', {'Topics': [{'TopicArn': 'arn:foo:bar:push'}]})
+        stubber.add_response('list_topics', {'Topics': [{'TopicArn': 'arn:foo:bar:123_push'}]})
         stubber.add_response('publish', {'MessageId': '1234'})
         with stubber:
             response = index('123')
@@ -92,7 +92,7 @@ class TestApp(object):
 
         stubber = Stubber(SNS)
         stubber.add_response('list_topics', {'Topics': [{'TopicArn': 'arn:foo:bar:push'}]})
-        stubber.add_response('create_topic', {'TopicArn': 'arn:foo:baz:push'})
+        stubber.add_response('create_topic', {'TopicArn': 'arn:foo:baz:123_push'})
         stubber.add_response('publish', {'MessageId': '1234'})
 
         with stubber:

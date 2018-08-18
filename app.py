@@ -34,9 +34,9 @@ def validate_signature(request):
         _, sha1 = signature.split('=')
     except (KeyError, ValueError):
         raise BadRequestError()
-    digest = hmac.new(CONFIG['SECRET'], request.raw_body, hashlib.sha1) \
+    digest = hmac.new(CONFIG['SECRET'].encode(), request.raw_body.encode(), hashlib.sha1) \
         .hexdigest()
-    if not hmac.compare_digest(digest, sha1.encode('utf-8')):
+    if not hmac.compare_digest(digest.encode(), sha1.encode()):
         raise UnauthorizedError()
 
 
