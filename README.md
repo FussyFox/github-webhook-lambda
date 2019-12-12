@@ -1,4 +1,3 @@
-[![Build Status](https://travis-ci.org/Fussyfox/github-webhook-lambda.svg?branch=master)](https://travis-ci.org/Fussyfox/github-webhook-lambda)
 [![Coverage Status](https://codecov.io/gh/Fussyfox/github-webhook-lambda/branch/master/graph/badge.svg)](https://codecov.io/gh/Fussyfox/github-webhook-lambda)
 
 # GitHub WebHook receiver for AWS Lambda
