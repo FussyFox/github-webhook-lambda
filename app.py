@@ -13,10 +13,19 @@ import os
 import boto3
 from chalice import BadRequestError, Chalice, UnauthorizedError
 
+DEFAULT_HASHLIB_BLACKLIST = 'CRC32,CRC32C,MD4,MD5,MDC2'
+
+
+def parse_hashlib_blacklist(envstr):
+    """Helper to load CONFIG['HASHLIB_BLACKLIST']"""
+    return set(map(lambda s: s.strip().lower(), envstr.split(',')))
+
+
 CONFIG = {
     'DEBUG': os.environ.get('DEBUG', '') in [1, '1', 'True', 'true'],
     'SECRET': os.environ.get('SECRET'),
     'S3_REGION': os.environ.get('S3_REGION', 'eu-west-1'),
+    'HASHLIB_BLACKLIST': parse_hashlib_blacklist(os.getenv('HASHLIB_BLACKLIST', DEFAULT_HASHLIB_BLACKLIST)),
 }
 
 app = Chalice(app_name='github-webhooks')
@@ -31,13 +40,18 @@ def validate_signature(request):
         return
     try:
         signature = request.headers['X-Hub-Signature']
-        _, sha1 = signature.split('=')
+        hashname, hashval = signature.split('=')
     except (KeyError, ValueError):
         raise BadRequestError()
-    digest = hmac.new(CONFIG['SECRET'].encode(), request.raw_body.encode(), hashlib.sha1) \
+
+    if (hashname in CONFIG['HASHLIB_BLACKLIST']) or \
+            (hashname not in hashlib.algorithms_available):
+        raise BadRequestError('X-Hub-Signature hash algorithm unavailable')
+
+    digest = hmac.new(CONFIG['SECRET'].encode(), request.raw_body.encode(), hashname) \
         .hexdigest()
-    if not hmac.compare_digest(digest.encode(), sha1.encode()):
-        raise UnauthorizedError()
+    if not hmac.compare_digest(digest.encode(), hashval.encode('utf-8')):
+        raise UnauthorizedError('X-Hub-Signature mismatch')
 
 
 @app.route('/{integration}', methods=['POST'])
