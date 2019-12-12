@@ -2,5 +2,5 @@ language: python
 python: 3.6
 cache: pip
 install: pip install -Ur requirements-dev.txt
-script: coverage run --source app -m 'pytest' tests
+script: py.test
 after_success: codecov
